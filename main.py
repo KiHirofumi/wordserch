@@ -9,6 +9,7 @@ import json
 from argparse import ArgumentParser
 from bs4 import BeautifulSoup
 import urllib.request
+import lxml.html
 import json
 import requests
 from linebot import (
