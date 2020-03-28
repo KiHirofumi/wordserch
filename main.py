@@ -3,11 +3,14 @@ import os
 # Scrapeのため
 #import scrape as sc
 #import newsScrape as sc
-import wordSerch as ws
+#import wordSerch as ws
 import sys
 import json
 from argparse import ArgumentParser
-
+from bs4 import BeautifulSoup
+import urllib.request
+import json
+import requests
 from linebot import (
     LineBotApi, WebhookHandler
 )
@@ -62,6 +65,22 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    word = event.message.text
+    url = "https://www.weblio.jp/content/" + word
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36'}
+    r = requests.get(url, headers=headers)
+    html = r.text
+    bs = BeautifulSoup(html, 'lxml')
+    try:
+        meanings = bs.select_one("#cont > div:nth-child(6) > div > div.NetDicBody").text
+    except AttributeError:
+        meanings = "そのような言葉は見つからなかったよ...。ごめんね。"
+
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=word + '\n' + meanings.lstrip()))
+""" @handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
 #    line_bot_api.reply_message(
 #        event.reply_token,
 #        TextSendMessage(text=event.message.text)
@@ -75,7 +94,7 @@ def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=result)
-    )
+    ) """
 if __name__ == "__main__":
 #    app.run()
     port = int(os.getenv("PORT"))
