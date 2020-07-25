@@ -66,13 +66,17 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     word = event.message.text
-    url = "https://www.weblio.jp/content/" + word
+    #url = "https://www.weblio.jp/content/" + word
+    url = "http://e-words.jp/w/" + word
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36'}
     r = requests.get(url, headers=headers)
-    html = r.text
-    bs = BeautifulSoup(html, 'lxml')
+    #html = r.text
+    html = r.content
+    #bs = BeautifulSoup(html, 'lxml')
+    bs = BeautifulSoup(html, 'html.parser')
     try:
-        meanings = bs.select_one("#cont > div:nth-child(6) > div > div.NetDicBody").text
+        #meanings = bs.select_one("#cont > div:nth-child(6) > div > div.NetDicBody").text
+        meanings = bs.select_one("div#body > div#body-inner > main > div#content > article > div#Summary > p").text
     except AttributeError:
         meanings = "そのような言葉は見つからなかったよ...。ごめんね。"
 
