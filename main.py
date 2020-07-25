@@ -71,7 +71,8 @@ def handle_message(event):
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36'}
     r = requests.get(url, headers=headers)
     html = r.text
-    bs = BeautifulSoup(html, 'lxml')
+    #bs = BeautifulSoup(html, 'lxml')
+    bs = BeautifulSoup(html, 'html.parser')
     try:
         #meanings = bs.select_one("#cont > div:nth-child(6) > div > div.NetDicBody").text
         meanings = bs.select_one("div#body > div#body-inner > main > div#content > article > div#Summary > p").text
