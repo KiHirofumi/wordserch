@@ -70,7 +70,8 @@ def handle_message(event):
     url = "http://e-words.jp/w/" + word
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36'}
     r = requests.get(url, headers=headers)
-    html = r.text
+    #html = r.text
+    html = r.content
     #bs = BeautifulSoup(html, 'lxml')
     bs = BeautifulSoup(html, 'html.parser')
     try:
